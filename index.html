@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width" />
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="css/bootstrap-grid.css" rel="stylesheet">
+    <link href="css/bootstrap-reboot.css" rel="stylesheet">
+    <link href="css/bootstrap-utilities.css" rel="stylesheet">
+    <link type="text/css" href="css/style.css" rel="stylesheet">
+    <title>Title</title>
+</head>
+<body onload="loadData('http://swapi.dev/api/people/?page=1'); loadMovies('http://swapi.dev/api/films/');">
+<div class="container">
+    <h1>Everything about Star Wars</h1>
+
+    <div class="row">
+        <div class="col-md-3">
+            <button class="btn btn-dark" type="button" onclick="displayMovies()">Films</button>
+        </div>
+        <div class="col-md-9">
+            <div class="accordion">
+                <div class="card">
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row">
+        <h3 class="pb-4 mb-4 font-italic border-bottom"></h3>
+        <h1 class="center">
+            Enter a character
+        </h1>
+        <div class="input-group mb-3">
+            <input type="text" class="form-control" placeholder="" aria-label="" aria-describedby="basic-addon2">
+            <div class="input-group-append">
+                <button class="btn btn-outline-secondary" type="button" onclick="displayPersonInfo()">Search</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <table>
+                <tbody>
+                <tr>
+                    <td class="field">Birth Year</td>
+                    <td class="value"></td>
+                </tr>
+                <tr>
+                    <td class="field">Height</td>
+                    <td class="value"></td>
+                </tr>
+                <tr>
+                    <td class="field">Mass</td>
+                    <td class="value"></td>
+                </tr>
+                <tr>
+                    <td class="field">Gender</td>
+                    <td class="value"></td>
+                </tr>
+                <tr>
+                    <td class="field">Homeworld</td>
+                    <td class="value"><button type="button" onclick="displayPlanetInfo()">Show</button></td>
+                </tr>
+
+                </tbody>
+            </table>
+        </div>
+        <div class="more-info col-md-6 align-items-center">
+
+        </div>
+    </div>
+
+</div>
+
+
+
+<script type="text/javascript" src="js/script.js"></script>
+<script src="js/bootstrap.bundle.js"></script>
+<script src="js/bootstrap.esm.js"></script>
+<script src="js/bootstrap.js"></script>
+</body>
+</html>
