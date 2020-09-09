@@ -2,6 +2,7 @@ var people = []
 var planet = []
 var residents = []
 var movies = []
+var starship = []
 
 function loadMovies(url){
     fetch(url)
@@ -70,6 +71,19 @@ function loadResident(url, i){
         })
 }
 
+function loadStarship(url){
+    fetch(url)
+        .then((response) => {
+            return response.json()
+        })
+        .then((data) => {
+            setStarship(data)
+        })
+        .catch((err) => {
+            console.error(err)
+        })
+}
+
 function displayPersonInfo(){
     let name = document.getElementsByTagName('input').item(0).value
     let value = document.getElementsByClassName('value')
@@ -112,15 +126,20 @@ function displayPersonInfo(){
         document.getElementsByTagName('table').item(0).innerHTML = 'Not found!'
     }
 }
+
 function setPlanet(data){
     planet= data
 }
+
 function setData(data){
     people.push(data.results)
 }
+
 function displayPlanetInfo(){
     let details = document.getElementsByClassName('more-info')
     let name = document.getElementsByTagName('input').item(0).value
+
+    residents.length = 0
 
     details.item(0).innerHTML = "<h2>" + name + "'s world</h2>"
     details.item(0).innerHTML += "<p> Name: " + planet.name + " <br /> Climate: "+ planet.climate +
@@ -155,6 +174,18 @@ function displayMovies(){
     document.getElementsByClassName('btn').item(0).disabled = true
 }
 
+function setStarship(data){
+    starship = data
+}
+
+function displayStarship(){
+    let n = Math.floor(Math.random() * 36) + 1
+    loadStarship('https://swapi.dev/api/starships/' + n.toString() + '/')
+
+    let show = document.getElementsByClassName('star')
+    show.item(0).textContent = starship.name
+    console.log(starship)
+}
 
 
 
