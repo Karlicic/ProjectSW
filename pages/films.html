@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width" />
+    <link href="../css/bootstrap.css" rel="stylesheet">
+    <link href="../css/bootstrap-grid.css" rel="stylesheet">
+    <link href="../css/bootstrap-reboot.css" rel="stylesheet">
+    <link href="../css/bootstrap-utilities.css" rel="stylesheet">
+    <link type="text/css" href="../css/style.css" rel="stylesheet">
+    <title>Title</title>
+</head>
+<body onload="loadMovies('https://swapi.dev/api/films/'); loadPlanets('https://swapi.dev/api/planets/');
+loadPeople('https://swapi.dev/api/people/'); loadSpecies('https://swapi.dev/api/species/'); loadStarships('https://swapi.dev/api/starships/');
+loadVehicles('https://swapi.dev/api/vehicles/')">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+        <a class="navbar-brand" href="#" onclick="showCardBlockTitle()">
+            <img alt="" class="img-thumbnail bg-transparent mr-2" src="../images/yoda.png" width="50" height="50">
+            NeverSeenItClub
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample07" aria-controls="navbarsExample07" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarsExample07">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/ProjectSW/index.html" onclick="displayMoviesInfo(); this.onclick=null;">Home<span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Films</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/ProjectSW/pages/characters.html">Characters</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<div class="container" style="background: rgba(0,0,0,0.6)">
+    <div class="jumbotron jumbotron-fluid text-center">
+        <div class="container mt-5 my-5">
+            <h1 class="display-4">Films</h1>
+            <p class="lead">The Star Wars franchise has spawned multiple live-action and animated films.
+                The franchise started with a film trilogy set in medias res—beginning in the middle of the
+                story—which was later expanded to a trilogy of trilogies, better known as the "Skywalker saga".
+                The original trilogy was released between 1977 and 1983, the prequel trilogy between 1999 and 2005,
+                and a sequel trilogy between 2015 and 2019. The original eponymous film, later subtitled Episode IV – A New Hope,
+                was followed by the sequels Episode V – The Empire Strikes Back (1980) and Episode VI – Return of the Jedi (1983),
+                forming what is collectively referred to as the original trilogy.</p>
+        </div>
+    </div>
+
+    <h3 class="pb-4 mb-4 font-italic border-bottom mt-5"></h3>
+        <div class="scrolling-wrapper row flex-row flex-nowrap mt-4 pb-4">
+            <div class="col-5">
+                <div class="card card-block"></div>
+            </div>
+            <div class="col-5">
+                <div class="card card-block">
+                </div>
+            </div>
+            <div class="col-5">
+                <div class="card card-block"></div>
+            </div>
+            <div class="col-5">
+                <div class="card card-block"></div>
+            </div>
+            <div class="col-5">
+                <div class="card card-block"></div>
+            </div>
+            <div class="col-5">
+                <div class="card card-block"></div>
+            </div>
+        </div>
+    <div class="row my-5" id="film">
+        <h3 class="pb-4 mb-4 font-italic border-bottom mt-5"></h3>
+        <h1 class="center-block filmTitle">Title</h1>
+    </div>
+    <div class="row">
+        <div class="col-4">
+            <h2>Characters</h2>
+            <ul class="list-group">
+
+            </ul>
+        </div>
+        <div class="col-4">
+            <h2>Planets</h2>
+            <ul class="list-group">
+
+            </ul>
+            <h2>Starships</h2>
+            <ul class="list-group">
+
+            </ul>
+        </div>
+        <div class="col-4">
+            <h2>Species</h2>
+            <ul class="list-group">
+
+            </ul>
+            <h2>Vehicles</h2>
+            <ul class="list-group">
+
+            </ul>
+        </div>
+    </div>
+    <h3 class="pb-4 mb-4 font-italic border-bottom mt-5"></h3>
+<div class="row">
+    <h1 class="title center-block">Title</h1>
+    <p class="description">
+
+    </p>
+</div>
+</div>
+</body>
+<script type="text/javascript" src="../js/script.js"></script>
+<script src="../js/bootstrap.bundle.js"></script>
+<script src="../js/bootstrap.esm.js"></script>
+<script src="../js/bootstrap.js"></script>
+</html>

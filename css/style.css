@@ -2,9 +2,18 @@ body{
     line-height: 1;
     font-family: "IBM Plex Mono", monospace;
     font-weight: 600;
+    background-image: url('star-wars-backgrounds-25.jpg');
+    background-size: auto;
+}
+h1, h2, p {
+    color: white;
 }
 .container{
     margin: auto;
+}
+.container:nth-child(2){
+    background-color: rgba(0,0,0,0.6);
+
 }
 table {
     border-collapse: collapse;
@@ -16,9 +25,83 @@ th, td {
     padding: 8px;
 }
 
-span:hover{
+span{
+    color: white;
+}
+span, .list-group-item:hover{
     color: yellow;
     cursor: pointer;
 }
 
 tr:nth-child(even) {background-color: #f2f2f2;}
+
+tr:nth-child(odd) {background-color: darkgray;}
+
+canvas{
+    width: 28px;
+    height: 24px;
+    border: 1px solid #d3d3d3;
+}
+
+#poster{
+    visibility: hidden;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+.center-block{
+    display: block;
+    margin-right: auto;
+    margin-left: auto;
+    width: 800px;
+    text-align: center;
+}
+.scrolling-wrapper{
+    overflow-x: scroll;
+
+}
+.card-block{
+    height: 250px;
+    border: none;
+    background-color: black;
+    background-size: cover;
+    transition: all 0.2s ease-in-out !important;
+    display: block;
+}
+.card-block:hover{
+    transform: translateY(-5px);
+    box-shadow: none;
+    cursor: pointer;
+
+ }
+.card-block, .test
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.card-block > .h1
+{
+    flex: 0 0 120px;
+}
+.list-group{
+    color: black;
+}
+a{
+    color: white;
+    text-decoration: none;
+}
+a:hover{
+    color: yellow;
+}
+.jumbotron{
+    padding: 140px 100px;
+}
+.star{
+    box-sizing: border-box;
+    width: 300px;
+    height: 100px;
+    padding: 30px;
+    border: 10px solid yellow;
+    text-align: center;
+}
