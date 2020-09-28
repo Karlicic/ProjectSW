@@ -1,10 +1,17 @@
-var people = []
-var planets = []
-var residents = []
-var movies = []
-var starships = []
-var species = []
-var vehicles = []
+people = []
+planets = []
+residents = []
+movies = []
+starships = []
+species = []
+vehicles = []
+
+
+
+window.addEventListener('load',  (event) => {loadMovies('https://swapi.dev/api/films/'); loadPlanets('https://swapi.dev/api/planets/');
+    loadPeople('https://swapi.dev/api/people/'); loadSpecies('https://swapi.dev/api/species/'); loadStarships('https://swapi.dev/api/starships/');
+    loadVehicles('https://swapi.dev/api/vehicles/')});
+
 
 function loadMovies(url){
 
@@ -133,9 +140,10 @@ function loadVehicles(url){
 }
 
 function setMovies(data){
-    movies.push(data)
-    for (let i=0; i<movies[0].results.length; i++)
-        document.getElementsByClassName('card-header').item(i).textContent = movies[0].results[i].title
+    this.movies.push(data)
+    for (let i=0; i<this.movies[0].results.length; i++)
+        document.getElementsByClassName('card-header').item(i).textContent = this.movies[0].results[i].title
+
 }
 
 function setPlanets(data){
@@ -173,7 +181,7 @@ function addCharacters(num){
     for(let i =0; i<movies[0].results[num].characters.length; i++){
         var char = findChar(movies[0].results[num].characters[i])
         if (char!=null) {
-            list.item(0).innerHTML += `<li class="list-group-item" onclick="characterDescription(`+char+`)">${char.name}</li>`
+            list.item(0).innerHTML += `<li class="list-group-item" onclick="characterDescription(${char})">${char.name}</li>`
         }
     }
 }
@@ -219,18 +227,23 @@ function addVehicles(num){
 }
 
 function findMovies(url){
-    for(let i = 0; i < movies.length; i++)
-        if(movies[i].some(item => item.url === url))
-            return movies[i].find(item => item.url === url)
+    let arr = movies[0].results
+    for(let i = 0; i < arr.length; i++)
+        if(arr[i].url.includes(url))
+            return arr[i]
 
     return null
 }
 
 function findChar(charUrl) {
-    for(let i = 0; i < people.length; i++)
-        if(people[i].some(item => item.url === charUrl))
-            return people[i].find(item => item.url === charUrl)
-
+    for(let i = 0; i < people.length; i++){
+        for(let j = 0; j< people[i].length; j++)
+        {
+            let arr = people[i]
+            if(arr[j].url.includes(charUrl))
+                return arr[j]
+        }
+    }
     return null
 }
 
@@ -266,6 +279,7 @@ function findVehicles(url){
 }
 
 function characterDescription(character) {
+
     let temp = []
     let title = document.getElementsByClassName('title').item(0)
     title.textContent = character.name
@@ -273,13 +287,12 @@ function characterDescription(character) {
     description.innerHTML = `${character.name} made an appearance in ${character.films.length} Star Wars movies.`
     for(let i =0 ; i <character.films.length; i++) {
         temp.push(findMovies(character.films[i]))
+        console.log(temp)
         description.innerHTML += temp[i].title
     }
 }
 
-window.addEventListener('load',  (event) => {loadMovies('https://swapi.dev/api/films/'); loadPlanets('https://swapi.dev/api/planets/');
-    loadPeople('https://swapi.dev/api/people/'); loadSpecies('https://swapi.dev/api/species/'); loadStarships('https://swapi.dev/api/starships/');
-    loadVehicles('https://swapi.dev/api/vehicles/')});
+
 
 document.getElementsByClassName('card-block').item(0).addEventListener('click',function (){
     addCharacters(0); addPlanets(0); addStarships(0);addVehicles(0);addSpecies(0);})
