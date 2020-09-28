@@ -12,7 +12,7 @@ function loadMovies(url){
             return response.json()
         })
         .then((data) => {
-            movies.push(data)
+            setMovies(data)
         })
         .catch((err) => {
             console.error(err)
@@ -129,6 +129,11 @@ function loadVehicles(url){
         .catch((err) => {
             console.error(err)
         })
+}
+
+function setMovies(data){
+    movies.push(data)
+    displayMoviesInfo()
 }
 
 function setPlanets(data){
