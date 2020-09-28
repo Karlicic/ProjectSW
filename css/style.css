@@ -28,7 +28,12 @@ th, td {
 span{
     color: white;
 }
-span, .list-group-item:hover{
+span:hover{
+    color: yellow;
+    cursor: pointer;
+}
+
+.list-group-item:hover{
     color: yellow;
     cursor: pointer;
 }
@@ -80,9 +85,9 @@ canvas{
     justify-content: center;
     align-items: center;
 }
-.card-block > .h1
+.card-header
 {
-    flex: 0 0 120px;
+    color: white;
 }
 .list-group{
     color: black;
