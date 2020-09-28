@@ -110,3 +110,6 @@ a:hover{
     border: 10px solid yellow;
     text-align: center;
 }
+footer{
+    background-color: rgba(0,0,0, 0.9);
+}
