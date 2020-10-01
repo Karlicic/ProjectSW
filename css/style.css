@@ -88,6 +88,7 @@ canvas{
 .list-group{
     color: black;
 }
+
 a{
     color: white;
     text-decoration: none;
@@ -108,4 +109,7 @@ a:hover{
 }
 footer{
     background-color: rgba(0,0,0, 0.9);
+}
+.item-link{
+    color: black;
 }
