@@ -110,6 +110,6 @@ a:hover{
 footer{
     background-color: rgba(0,0,0, 0.9);
 }
-.item-link{
+.character-link, .planet-link{
     color: black;
 }

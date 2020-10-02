@@ -181,10 +181,10 @@ function addCharacters(num){
     for(let i =0; i<movies[0].results[num].characters.length; i++){
         let char = findCharacter(movies[0].results[num].characters[i])
         if (char != null) {
-            list.item(0).innerHTML += `<li class="list-group-item"><a class="item-link" href="#story">${char.name}</a></li>`;
+            list.item(0).innerHTML += `<li class="list-group-item"><a class="character-link" href="#story">${char.name}</a></li>`;
         }
     }
-    checkIfClicked();
+    checkIfClickedCharacter();
 }
 
 function addSpecies(num){
@@ -203,8 +203,9 @@ function addPlanets(num){
     for(let i =0; i<movies[0].results[num].planets.length; i++){
         let s = findPlanets(movies[0].results[num].planets[i])
         if (s!=null)
-            list.item(1).innerHTML += `<li class="list-group-item">${s.name}</li>`
+            list.item(1).innerHTML += `<li class="list-group-item"><a href="#story" class="planet-link">${s.name}</a></li>`
     }
+    checkIfClickedPlanet();
 }
 
 function addStarships(num){
@@ -280,6 +281,18 @@ function findPlanets(url){
     return null
 }
 
+function findPlanetByName(name) {
+    for(let i = 0; i < planets.length; i++){
+        for(let j = 0; j< planets[i].length; j++)
+        {
+            let arr = planets[i]
+            if(arr[j].name.includes(name))
+                return arr[j]
+        }
+    }
+    return null
+}
+
 function findStarships(url){
     for(let i = 0; i < starships.length; i++)
         for(let j = 0; j< starships[i].length; j++)
@@ -304,15 +317,28 @@ function findVehicles(url){
 }
 
 function characterDescription(characterName) {
-    let character = findCharacterByName(characterName);
     let temp = []
+    let character = findCharacterByName(characterName);
     let specie = findSpecies(character.species);
     let planet = findPlanets(character.homeworld);
     let title = document.getElementsByClassName('title').item(0)
-    title.textContent = character.name
     let description = document.getElementsByClassName('description').item(0)
-    description.innerHTML = `${character.name}, a ${specie.name.toLowerCase()} born in ${character.birth_year}, comes from the planet ${planet.name}.
-     ${characterName} made an appearance in ${character.films.length} Star Wars movies: `
+    let pronoun;
+
+    if(character.gender === "male")
+        pronoun = "He";
+    else if(character.gender === "female")
+        pronoun = "She";
+    else
+        pronoun = "It";
+
+    title.textContent = character.name
+    description.innerHTML = `${character.name}, a ${specie.name.toLowerCase()}`
+
+        if(character.birth_year !== "unknown")
+            description.innerHTML += ` born in ${character.birth_year}`
+
+    description.innerHTML += `, comes from the planet ${planet.name}. ${pronoun} made an appearance in ${character.films.length} Star Wars movies: `
     for(let i =0 ; i <character.films.length; i++) {
         temp.push(findMovies(character.films[i]))
         if (i === character.films.length - 1){
@@ -321,18 +347,54 @@ function characterDescription(characterName) {
             description.innerHTML += temp[i].title + ", "
         }
     }
+    let arrVehicles = []
+    if(character.vehicles.length !== 0){
+        for(let i= 0; i <character.vehicles.length; i++){
+            arrVehicles[i] = findVehicles(character.vehicles[i]);
+        }
+    }
+    let arrStarships = []
+    if(character.starships.length !== 0){
+        for(let i= 0; i <character.starships.length; i++){
+            arrStarships[i] = findStarships(character.starships[i]);
+        }
+    }
     if(character.vehicles.length !== 0 && character.starships.length !== 0){
-        description.innerHTML += characterName + ` owns ${character.vehicles.length} vehicles and ${character.starships.length} starships.`
+        description.innerHTML += characterName + ` owns ${character.vehicles.length} vehicles `
+        for(let i= 0; i <character.vehicles.length; i++){
+            description.innerHTML += arrVehicles[i].name + ", "
+        }
+        description.innerHTML +=`  and ${character.starships.length} starships `
+        for(let i= 0; i <character.starships.length; i++){
+            if( i === character.starships.length - 1){
+                description.innerHTML += arrStarships[i].name + ". "
+            }
+            else
+                description.innerHTML += arrStarships[i].name + ", "
+        }
     }
     else if(character.vehicles.length === 0 && character.starships.length === 0){
         description.innerHTML += characterName + ` doesn't own any vehicles nor starships.`
     }
     else if(character.vehicles.length !== 0 && character.starships.length === 0){
-        description.innerHTML += characterName + ` owns ${character.vehicles.length} vehicles and doesn't own any starships.`
+        description.innerHTML += characterName + ` owns ${character.vehicles.length} vehicles `
+        for(let i= 0; i <character.vehicles.length; i++){
+            description.innerHTML += arrVehicles[i].name + ", "
+        }
+        description.innerHTML += `and doesn't own any starships.`
     }
     else if(character.vehicles.length === 0 && character.starships.length !== 0){
-        description.innerHTML += characterName + ` owns ${character.starships.length} starships and doesn't own any vehicles.`
+        description.innerHTML += characterName + ` owns ${character.starships.length} starships `
+        for(let i= 0; i <character.starships.length; i++){
+            description.innerHTML += arrStarships[i].name + ", "
+        }
+        description.innerHTML += ` and doesn't own any vehicles.`
     }
+}
+
+function planetDescription(planetName){
+    let planet = findPlanetByName(planetName)
+
 }
 
 
@@ -350,10 +412,18 @@ document.getElementsByClassName('card-block').item(4).addEventListener('click',f
 document.getElementsByClassName('card-block').item(5).addEventListener('click',function (){
     addCharacters(5); addPlanets(5); addStarships(5);addVehicles(5);addSpecies(5);})
 
-function checkIfClicked(){
-    [...document.querySelectorAll('.item-link')].forEach(function(item) {
+function checkIfClickedCharacter(){
+    [...document.querySelectorAll('.character-link')].forEach(function(item) {
         item.addEventListener('click', function() {
             characterDescription(item.innerHTML)
+        });
+    });
+}
+
+function checkIfClickedPlanet(){
+    [...document.querySelectorAll('.planet-link')].forEach(function(item) {
+        item.addEventListener('click', function() {
+            planetDescription(item.innerHTML)
         });
     });
 }
