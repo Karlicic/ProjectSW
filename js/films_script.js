@@ -447,7 +447,7 @@ function starshipDescription(starshipName){
     let title = document.getElementsByClassName('title').item(0)
     let description = document.getElementsByClassName('description').item(0)
     title.textContent = starshipName
-    description.innerHTML += `${starshipName}'s characteristics 
+    description.innerHTML = `${starshipName}'s characteristics 
 <br> Model: ${starship.model} 
 <br> Manufacturer: ${starship.manufacturer}
 <br> Cost in credits: ${starship.cost_in_credits}
@@ -468,7 +468,7 @@ function vehicleDescription(vehicleName){
     let title = document.getElementsByClassName('title').item(0)
     let description = document.getElementsByClassName('description').item(0)
     title.textContent = vehicleName
-    description.innerHTML += `${vehicleName}'s characteristics 
+    description.innerHTML = `${vehicleName}'s characteristics 
 <br> Model: ${vehicle.model} 
 <br> Manufacturer: ${vehicle.manufacturer}
 <br> Cost in credits: ${vehicle.cost_in_credits}
