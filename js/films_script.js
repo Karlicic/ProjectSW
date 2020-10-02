@@ -8,7 +8,7 @@ vehicles = []
 
 
 
-window.addEventListener('load',  (event) => {loadMovies('https://swapi.dev/api/films/'); loadPlanets('https://swapi.dev/api/planets/');
+window.addEventListener('load',  () => {loadMovies('https://swapi.dev/api/films/'); loadPlanets('https://swapi.dev/api/planets/');
     loadPeople('https://swapi.dev/api/people/'); loadSpecies('https://swapi.dev/api/species/'); loadStarships('https://swapi.dev/api/starships/');
     loadVehicles('https://swapi.dev/api/vehicles/')});
 
@@ -394,6 +394,24 @@ function characterDescription(characterName) {
 
 function planetDescription(planetName){
     let planet = findPlanetByName(planetName)
+    let title = document.getElementsByClassName('title').item(0)
+    let description = document.getElementsByClassName('description').item(0)
+    title.textContent = planetName
+    description.innerHTML = `${planetName} is a planet with rotation period of ${planet.rotation_period} and 
+    orbital period of ${planet.orbital_period}. It's diameter is ${planet.diameter}. The climate in ${planetName} 
+    is ${planet.climate} and the terrain is ${planet.terrain}. There are ${planet.population} residents on this planet. `
+    if(planet.residents.length !== 0){
+        description.innerHTML += `${planet.residents.length} of ${planetName}'s residents makes an appearance: `
+        for(let i = 0; i<planet.residents.length; i++){
+            if(i === planet.residents.length- 1)
+            {
+                description.innerHTML += findCharacter(planet.residents[i]).name +`. `
+                continue
+            }
+            description.innerHTML += findCharacter(planet.residents[i]).name +`, `
+
+        }
+    }
 
 }
 
