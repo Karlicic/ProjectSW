@@ -193,8 +193,9 @@ function addSpecies(num){
     for(let i =0; i<movies[0].results[num].species.length; i++){
         let s = findSpecies(movies[0].results[num].species[i])
         if (s!=null)
-            list.item(3).innerHTML += `<li class="list-group-item">${s.name}</li>`
+            list.item(3).innerHTML += `<li class="list-group-item"><a href="#story" class="specie-link">${s.name}</a></li>`
     }
+    checkIfClickedSpecie()
 }
 
 function addPlanets(num){
@@ -214,8 +215,9 @@ function addStarships(num){
     for(let i =0; i<movies[0].results[num].starships.length; i++){
         let s = findStarships(movies[0].results[num].starships[i])
         if (s!=null)
-            list.item(2).innerHTML += `<li class="list-group-item">${s.name}</li>`
+            list.item(2).innerHTML += `<li class="list-group-item"><a href="#story" class="starship-link">${s.name}</a></li>`
     }
+    checkIfClickedStarship()
 }
 
 function addVehicles(num){
@@ -224,11 +226,13 @@ function addVehicles(num){
     for(let i =0; i<movies[0].results[num].vehicles.length; i++){
         let s = findVehicles(movies[0].results[num].vehicles[i])
         if (s!=null)
-            list.item(4).innerHTML += `<li class="list-group-item">${s.name}</li>`
+            list.item(4).innerHTML += `<li class="list-group-item"><a href="#story" class="vehicle-link">${s.name}</a></li>`
     }
+    checkIfClickedVehicle()
 }
 
-function findMovies(url){
+function findMovies(url)
+{
     let arr = movies[0].results
     for(let i = 0; i < arr.length; i++)
         if(arr[i].url.includes(url))
@@ -305,6 +309,17 @@ function findStarships(url){
     return null
 }
 
+function findStarshipByName(name){
+    for(let i = 0; i < starships.length; i++){
+        for(let j = 0; j< starships[i].length; j++)
+        {
+            let arr = starships[i]
+            if(arr[j].name.includes(name))
+                return arr[j]
+        }
+    }
+    return null
+}
 function findVehicles(url){
     for(let i = 0; i < vehicles.length; i++)
         for(let j = 0; j< vehicles[i].length; j++)
@@ -415,7 +430,34 @@ function planetDescription(planetName){
 
 }
 
+function starshipDescription(starshipName){
+    let starship = findStarshipByName(starshipName)
+    let title = document.getElementsByClassName('title').item(0)
+    let description = document.getElementsByClassName('description').item(0)
+    title.textContent = starshipName
+    description.innerHTML += `${starshipName}'s characteristics 
+<br> Model: ${starship.model} 
+<br> Manufacturer: ${starship.manufacturer}
+<br> Cost in credits: ${starship.cost_in_credits}
+<br> Max atmosphering speed: ${starship.max_atmosphering_speed}
+<br> Crew: ${starship.crew}
+<br> Passengers: ${starship.passengers}
+<br> Cargo capacity: ${starship.cargo_capacity}
+<br> Starship class: ${starship.starship_class}
+<br> Seen in ${starship.films.length} Star Wars movies: <br>`
+    for(let i =0 ; i<starship.films.length; i++){
+        description.innerHTML += findMovies(starship.films[i]).title + `<br>`
+    }
 
+}
+
+function vehicleDescription(vehicleName){
+
+}
+
+function speciesDescription(speciesName){
+
+}
 
 document.getElementsByClassName('card-block').item(0).addEventListener('click',function (){
     addCharacters(0); addPlanets(0); addStarships(0);addVehicles(0);addSpecies(0);})
@@ -442,6 +484,30 @@ function checkIfClickedPlanet(){
     [...document.querySelectorAll('.planet-link')].forEach(function(item) {
         item.addEventListener('click', function() {
             planetDescription(item.innerHTML)
+        });
+    });
+}
+
+function checkIfClickedStarship(){
+    [...document.querySelectorAll('.starship-link')].forEach(function(item) {
+        item.addEventListener('click', function() {
+            starshipDescription(item.innerHTML)
+        });
+    });
+}
+
+function checkIfClickedVehicle(){
+    [...document.querySelectorAll('.vehicle-link')].forEach(function(item) {
+        item.addEventListener('click', function() {
+            vehicleDescription(item.innerHTML)
+        });
+    });
+}
+
+function checkIfClickedSpecie(){
+    [...document.querySelectorAll('.specie-link')].forEach(function(item) {
+        item.addEventListener('click', function() {
+            speciesDescription(item.innerHTML)
         });
     });
 }
