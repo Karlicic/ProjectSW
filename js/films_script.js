@@ -320,6 +320,7 @@ function findStarshipByName(name){
     }
     return null
 }
+
 function findVehicles(url){
     for(let i = 0; i < vehicles.length; i++)
         for(let j = 0; j< vehicles[i].length; j++)
@@ -331,6 +332,17 @@ function findVehicles(url){
     return null
 }
 
+function findVehicleByName(name){
+    for(let i = 0; i < vehicles.length; i++){
+        for(let j = 0; j< vehicles[i].length; j++)
+        {
+            let arr = vehicles[i]
+            if(arr[j].name.includes(name))
+                return arr[j]
+        }
+    }
+    return null
+}
 function characterDescription(characterName) {
     let temp = []
     let character = findCharacterByName(characterName);
@@ -452,7 +464,23 @@ function starshipDescription(starshipName){
 }
 
 function vehicleDescription(vehicleName){
-
+    let vehicle = findVehicleByName(vehicleName)
+    let title = document.getElementsByClassName('title').item(0)
+    let description = document.getElementsByClassName('description').item(0)
+    title.textContent = vehicleName
+    description.innerHTML += `${vehicleName}'s characteristics 
+<br> Model: ${vehicle.model} 
+<br> Manufacturer: ${vehicle.manufacturer}
+<br> Cost in credits: ${vehicle.cost_in_credits}
+<br> Max atmosphering speed: ${vehicle.max_atmosphering_speed}
+<br> Crew: ${vehicle.crew}
+<br> Passengers: ${vehicle.passengers}
+<br> Cargo capacity: ${vehicle.cargo_capacity}
+<br> Vehicle class: ${vehicle.vehicle_class}
+<br> Seen in ${vehicle.films.length} Star Wars movies: <br>`
+    for(let i =0 ; i<vehicle.films.length; i++){
+        description.innerHTML += findMovies(vehicle.films[i]).title + `<br>`
+    }
 }
 
 function speciesDescription(speciesName){

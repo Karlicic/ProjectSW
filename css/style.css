@@ -113,3 +113,6 @@ footer{
 .character-link, .planet-link, .specie-link, .starship-link, .vehicle-link{
     color: black;
 }
+#story{
+    font-size: 20px;
+}
