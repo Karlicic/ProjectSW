@@ -93,9 +93,6 @@ a{
     color: white;
     text-decoration: none;
 }
-a:hover{
-    color: yellow;
-}
 .jumbotron{
     padding: 140px 100px;
 }
@@ -115,4 +112,14 @@ footer{
 }
 #story{
     font-size: 20px;
+}
+.description > a{
+    color: white;
+}
+.description > a:hover{
+    color: yellow;
+    cursor: pointer;
+}
+a:hover{
+    color: yellow;
 }
