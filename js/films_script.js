@@ -277,6 +277,18 @@ function findSpecies(speciesURL){
     return null
 }
 
+function findSpecieByName(name){
+    for(let i = 0; i < species.length; i++){
+        for(let j = 0; j< species[i].length; j++)
+        {
+            let arr = species[i]
+            if(arr[j].name.includes(name))
+                return arr[j]
+        }
+    }
+    return null
+}
+
 function findPlanets(url){
     for(let i = 0; i < planets.length; i++)
         if(planets[i].some(item => item.url === url))
@@ -483,8 +495,31 @@ function vehicleDescription(vehicleName){
     }
 }
 
-function speciesDescription(speciesName){
-
+function specieDescription(speciesName){
+    let specie = findSpecieByName(speciesName)
+    let title = document.getElementsByClassName('title').item(0)
+    let description = document.getElementsByClassName('description').item(0)
+    title.textContent = speciesName
+    description.innerHTML = `${speciesName}s are classified as ${specie.classification}.
+    Their average height is ${specie.average_height}. The average ${speciesName} lives around ${specie.average_lifespan}. `
+    let str = specie.skin_colors.split(',')
+    if(str.length >= 2){
+        description.innerHTML +=`These species have variety of races ${specie.skin_colors}.`
+    }
+    else{
+        description.innerHTML +=`Their race is ${specie.skin_colors}.`
+    }
+    description.innerHTML +=` They come from the homeworld ${findPlanets(specie.homeworld).name}. 
+    In the Star Wars films we meet with ${specie.people.length} ${speciesName}s: `
+    for(let i =0 ; i<specie.people.length; i++){
+        if(i === specie.people.length -1){
+            description.innerHTML += findCharacter(specie.people[i]).name + `. `
+        }
+        else {
+            description.innerHTML += findCharacter(specie.people[i]).name + `, `
+        }
+    }
+    description.innerHTML +=`Their language is ${specie.language}. `
 }
 
 document.getElementsByClassName('card-block').item(0).addEventListener('click',function (){
@@ -535,7 +570,7 @@ function checkIfClickedVehicle(){
 function checkIfClickedSpecie(){
     [...document.querySelectorAll('.specie-link')].forEach(function(item) {
         item.addEventListener('click', function() {
-            speciesDescription(item.innerHTML)
+            specieDescription(item.innerHTML)
         });
     });
 }
