@@ -1,58 +1,6 @@
-var people = []
-var planets = []
-var residents = []
-var movies = []
-var starships = []
-var species = []
-var vehicles = []
+import {findObject, findMovie, movies, people, starships} from "./fetch_data.js";
 
-function loadMovies(url){
-    fetch(url)
-        .then((response) => {
-            return response.json()
-        })
-        .then((data) => {
-            setMovies(data)
-        })
-        .catch((err) => {
-            console.error(err)
-        })
-}
-
-function loadPeople(url) {
-    if (!url)
-    {
-        console.log('done')
-        return;
-    }
-    fetch(url)
-        .then((response) => {
-            return response.json()
-        })
-        .then((data) => {
-            setPeople(data)
-            loadPeople(data.next)
-        })
-        .catch((err) => {
-            console.error(err)
-        })
-}
-
-function loadPlanets(url){
-    if(!url)
-        return ;
-    fetch(url)
-        .then((response) => {
-            return response.json()
-        })
-        .then((data) => {
-            setPlanets(data.results)
-            loadPlanets(data.next)
-        })
-        .catch((err) => {
-            console.error(err)
-        })
-}
+let residents = []
 
 function loadResident(url, i){
     if (i >= url.length)
@@ -65,16 +13,18 @@ function loadResident(url, i){
             setResident(data)
             i += 1
             let details = document.getElementsByClassName('more-info')
-            let htmlString = "<span onclick='findPerson("+ i +")'>"+ data.name +", </span>"
+            let htmlString = "<span class='search-resident'>"+ data.name +"</span>"
             details.item(0).innerHTML += htmlString
+            checkIfClickedResident()
             loadResident(url, i)
         })
         .catch((err) => {
             console.error(err)
         })
+
 }
 
-function loadStarships(url){
+function loadMovies(url){
     if (!url)
     {
         console.log('done')
@@ -82,74 +32,14 @@ function loadStarships(url){
     }
     fetch(url)
         .then((response) => {
-            return response.json()
-        })
+        return response.json()
+    })
         .then((data) => {
-            setStarships(data)
-            loadStarships(data.next)
+            setMovies(data)
         })
         .catch((err) => {
             console.error(err)
         })
-}
-
-function loadSpecies(url){
-    if (!url)
-    {
-        console.log('done')
-        return;
-    }
-    fetch(url)
-        .then((response) => {
-            return response.json()
-        })
-        .then((data) => {
-            setSpecies(data)
-            loadSpecies(data.next)
-        })
-        .catch((err) => {
-            console.error(err)
-        })
-}
-
-function loadVehicles(url){
-    if (!url)
-    {
-        console.log('done')
-        return;
-    }
-    fetch(url)
-        .then((response) => {
-            return response.json()
-        })
-        .then((data) => {
-            setVehicles(data)
-            loadVehicles(data.next)
-        })
-        .catch((err) => {
-            console.error(err)
-        })
-}
-
-function setMovies(data){
-    movies.push(data)
-    displayMoviesInfo()
-}
-
-function setPlanets(data){
-    planets.push(data)
-}
-
-function setPeople(data){
-    people.push(data.results)
-}
-
-function setSpecies(data){
-    species.push(data.results)
-}
-
-function setStarships(data){
-    starships.push(data.results)
 
 }
 
@@ -157,11 +47,14 @@ function setResident(data){
     residents.push(data)
 }
 
-function setVehicles(data){
-    vehicles.push(data.results)
+function setMovies(data){
+    movies.push(data.results)
+    displayMoviesInfo()
+
 }
 
 function displayPersonInfo(){
+    checkIfClickedResident()
     let name = document.getElementsByTagName('input').item(0).value.trim()
     let value = document.getElementsByClassName('value')
     let personInfo
@@ -199,8 +92,8 @@ function displayPersonInfo(){
             value.item(1).textContent = personInfo.height
             value.item(2).textContent = personInfo.mass
             value.item(3).textContent = personInfo.gender
-            var myCanvas = document.getElementsByTagName('canvas');
-            var ctx = myCanvas.item(0).getContext('2d');
+            let myCanvas = document.getElementsByTagName('canvas');
+            let ctx = myCanvas.item(0).getContext('2d');
             ctx.fillStyle = personInfo.eye_color
             ctx.fillRect(0,0, 500, 500)
             ctx.fill();
@@ -216,7 +109,7 @@ function displayPersonInfo(){
 
 function displayPlanetInfo(planetUrl){
 
-    let planet = findPlanets(planetUrl)
+    let planet = findObject(planetUrl, planets, true)
 
     let details = document.getElementsByClassName('more-info')
     let name = document.getElementsByTagName('input').item(0).value
@@ -227,7 +120,6 @@ function displayPlanetInfo(planetUrl){
     details.item(0).innerHTML += "<p> Name: " + planet.name + " <br /> Climate: "+ planet.climate +
         "<br /> Terrain: "+ planet.terrain + "<br /> Population: " + planet.population + "<br/>"+ planet.name + "'s residents:</p>"
     loadResident(planet.residents, 0)
-    //details.item(0).innerHTML += "</p>"
 }
 
 function displayStarship(){
@@ -236,12 +128,19 @@ function displayStarship(){
     document.getElementsByClassName('star').item(0).textContent = starships[n][n1].name
 }
 
+function showPoster(num){
+     let path = "images/film%23"+ num + ".jpg"
+     let img = document.getElementById("poster");
+     img.src = path;
+     img.style.visibility = "visible";
+ }
+
 function displayMoviesInfo(){
 
     let accordion = document.getElementById('accordion')
     let arr = ['One', 'Two', 'Three', 'Four', 'Five', 'Six']
 
-    for( let i = 0; i<movies[0].count; i++){
+    for( let i = 0; i<movies[0].length; i++){
         let str1 = "heading" + arr[i]
         let str2 = "collapse" + arr[i]
         let str3 = "#" + str2
@@ -251,73 +150,49 @@ function displayMoviesInfo(){
     <div class="card-header" id=${str1}>
         <h5 class="mb-0">
             <button class="btn text-dark collapsed" data-toggle="collapse" aria-controls=${str2}
-            aria-expanded="false"  data-target=${str3} onclick="showPoster(${i+1});" >${movies[0].results[i].title}</button>
+            aria-expanded="false"  data-target=${str3} onclick="showPoster(${i+1});" >${movies[0][i].title}</button>
         </h5>
     </div>
     <div id=${str2} class="collapse" aria-labelledby=${str1} data-parent="#accordion">
-    <div class="card-body">Director: ${movies[0].results[i].director} <br/> Producer: ${movies[0].results[i].producer}
-    <br/>Release date: ${movies[0].results[i].release_date}
-    <br/>Opening: ${movies[0].results[i].opening_crawl}
+    <div class="card-body">Director: ${movies[0][i].director} <br/> Producer: ${movies[0][i].producer}
+    <br/>Release date: ${movies[0][i].release_date}
+    <br/>Opening: ${movies[0][i].opening_crawl}
     </div>
 </div>
 </div>`
 
     }
+    checkIfClicked()
+
 }
 
-function findPerson(i){
+function checkIfClicked(){
+    [...document.querySelectorAll('.collapsed')].forEach(function(item) {
+        item.addEventListener('click', function() {
+            let i = findMovie(item.innerHTML)
+            showPoster(i+1);
+        });
+    });
+}
+
+function findPerson(name){
     let inputValue = document.getElementsByTagName("input")
-    inputValue.item(0).value = residents[i-1].name
+    inputValue.item(0).value = name
     displayPersonInfo()
 }
 
-function findChar(charUrl) {
-    for(let i = 0; i < people.length; i++)
-        if(people[i].some(item => item.url === charUrl))
-            return people[i].find(item => item.url === charUrl)
-
-    return null
+function checkIfClickedResident(){
+    [...document.querySelectorAll('.search-resident')].forEach(function(item) {
+        item.addEventListener('click', function() {
+            findPerson(item.innerHTML)
+        });
+    });
 }
 
-function findSpecies(speciesURL){
-    for(let i = 0; i < species.length; i++)
-        if(species[i].some(item => item.url === speciesURL))
-            return species[i].find(item => item.url === speciesURL)
+window.addEventListener('load',  () => {
+    loadMovies('https://swapi.dev/api/films/');
+});
+document.getElementsByClassName('search-character').item(0).addEventListener('click', displayPersonInfo)
+document.getElementsByClassName('search-starship').item(0).addEventListener('click', displayStarship)
 
-    return null
-}
-
-function findPlanets(url){
-    for(let i = 0; i < planets.length; i++)
-        if(planets[i].some(item => item.url === url))
-            return planets[i].find(item => item.url === url)
-
-    return null
-}
-
-function findStarships(url){
-    for(let i = 0; i < starships.length; i++)
-        if(starships[i].some(item => item.url === url))
-            return starships[i].find(item => item.url === url)
-
-    return null
-}
-
-function findVehicles(url){
-    for(let i = 0; i < vehicles.length; i++)
-        if(vehicles[i].some(item => item.url === url))
-            return vehicles[i].find(item => item.url === url)
-    return null
-}
-
-function showPoster(num){
-    let path = "images/film%23"+ num + ".jpg"
-    let img = document.getElementById("poster");
-    img.src = path;
-    img.style.visibility = "visible";
-}
-
-window.addEventListener('load',  (event) => {loadMovies('https://swapi.dev/api/films/'); loadPlanets('https://swapi.dev/api/planets/');
-    loadPeople('https://swapi.dev/api/people/'); loadSpecies('https://swapi.dev/api/species/'); loadStarships('https://swapi.dev/api/starships/');
-    loadVehicles('https://swapi.dev/api/vehicles/')});
 

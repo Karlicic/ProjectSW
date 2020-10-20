@@ -1,23 +1,11 @@
-var people = []
-var planets = []
-var movies = []
-var species = []
+import {loadData, people, movies, species, findObject, planets} from "./fetch_data.js";
 
+
+/*
 window.addEventListener('load',  (event) => {loadMovies('https://swapi.dev/api/films/'); loadPlanets('https://swapi.dev/api/planets/');
     loadPeople('https://swapi.dev/api/people/'); loadSpecies('https://swapi.dev/api/species/');});
 
-function loadMovies(url){
-    fetch(url)
-        .then((response) => {
-            return response.json()
-        })
-        .then((data) => {
-            setMovies(data)
-        })
-        .catch((err) => {
-            console.error(err)
-        })
-}
+
 
 function loadPlanets(url){
     if(!url)
@@ -73,9 +61,6 @@ function loadPeople(url) {
         })
 }
 
-function setMovies(data){
-    movies.push(data)
-}
 
 function setPlanets(data){
     planets.push(data)
@@ -88,6 +73,7 @@ function setPeople(data){
 function setSpecies(data){
     species.push(data.results)
 }
+
 
 function findChar(charUrl) {
     for(let i = 0; i < people.length; i++)
@@ -126,6 +112,9 @@ function findSpecies(speciesURL){
     return null
 }
 
+
+ */
+
 function createTable(){
     let table = document.getElementsByTagName('table').item(0)
     let tmp =""
@@ -141,15 +130,15 @@ function createTable(){
             tmp =""
             for(let k = 0; k<people[i][j].films.length; k++){
                 if( k === people[i][j].films.length -1 )
-                    tmp += findMovies(people[i][j].films[k]).title
+                    tmp += findObject(people[i][j].films[k], movies, true).title
                 else
-                    tmp += findMovies(people[i][j].films[k]).title + ", "
+                    tmp += findObject(people[i][j].films[k], movies, true).title + ", "
 
             }
             table.innerHTML += `<tr>
 <td>${people[i][j].name}</td>
-<td>${findPlanets(people[i][j].homeworld).name}</td>
-<td>${findSpecies(people[i][j].species).name}</td>
+<td>${findObject(people[i][j].homeworld, planets, true).name}</td>
+<td>${findObject(people[i][j].species, species, true).name}</td>
 <td>${tmp}</td>
 </tr>`
         }
@@ -163,7 +152,7 @@ function filterByTitle(){
     let n = 0
     while ( n < 6) {
         table.innerHTML += `
-<h1>${movies[0].results[n].title}</h1>`
+<h1>${movies[0][n].title}</h1>`
         table.innerHTML += `
 <tr>
     <th>Name</th>
@@ -176,16 +165,16 @@ function filterByTitle(){
                 tmp = ""
                 for (let k = 0; k < people[i][j].films.length; k++) {
                     if (k === people[i][j].films.length - 1)
-                        tmp += findMovies(people[i][j].films[k]).title
+                        tmp += findObject(people[i][j].films[k], movies, true).title
                     else
-                        tmp += findMovies(people[i][j].films[k]).title + ", "
+                        tmp += findObject(people[i][j].films[k], movies, true).title + ", "
 
                 }
-                if(tmp.includes(movies[0].results[n].title)) {
+                if(tmp.includes(movies[0][n].title)) {
                     table.innerHTML += `<tr>
 <td>${people[i][j].name}</td>
-<td>${findPlanets(people[i][j].homeworld).name}</td>
-<td>${findSpecies(people[i][j].species).name}</td>
+<td>${findObject(people[i][j].homeworld, planets, true).name}</td>
+<td>${findObject(people[i][j].species, species, true).name}</td>
 <td>${tmp}</td>
 </tr>`
                 }
@@ -217,16 +206,16 @@ function filterByPlanet(){
                     tmp = ""
                     for (let k = 0; k < people[i][j].films.length; k++) {
                         if (k === people[i][j].films.length - 1)
-                            tmp += findMovies(people[i][j].films[k]).title
+                            tmp += findObject(people[i][j].films[k], movies, true).title
                         else
-                            tmp += findMovies(people[i][j].films[k]).title + ", "
+                            tmp += findObject(people[i][j].films[k], movies, true).title + ", "
 
                     }
-                    if (planets[page][n].name === findPlanets(people[i][j].homeworld).name) {
+                    if (planets[page][n].name === findObject(people[i][j].homeworld, planets, true).name) {
                         table.innerHTML += `<tr>
 <td>${people[i][j].name}</td>
-<td>${findPlanets(people[i][j].homeworld).name}</td>
-<td>${findSpecies(people[i][j].species).name}</td>
+<td>${findObject(people[i][j].homeworld, planets, true).name}</td>
+<td>${findObject(people[i][j].species, species, true).name}</td>
 <td>${tmp}</td>
 </tr>`
                     }
@@ -259,16 +248,16 @@ function filterBySpecie(){
                     tmp = ""
                     for (let k = 0; k < people[i][j].films.length; k++) {
                         if (k === people[i][j].films.length - 1)
-                            tmp += findMovies(people[i][j].films[k]).title
+                            tmp += findObject(people[i][j].films[k], movies, true).title
                         else
-                            tmp += findMovies(people[i][j].films[k]).title + ", "
+                            tmp += findObject(people[i][j].films[k], movies, true).title + ", "
 
                     }
-                    if (species[page][n].name === findSpecies(people[i][j].species).name) {
+                    if (species[page][n].name === findObject(people[i][j].species, species, true).name) {
                         table.innerHTML += `<tr>
 <td>${people[i][j].name}</td>
-<td>${findPlanets(people[i][j].homeworld).name}</td>
-<td>${findSpecies(people[i][j].species).name}</td>
+<td>${findObject(people[i][j].homeworld, planets, true).name}</td>
+<td>${findObject(people[i][j].species, species, true).name}</td>
 <td>${tmp}</td>
 </tr>`
                     }
@@ -278,3 +267,5 @@ function filterBySpecie(){
         }
     }
 }
+
+window.addEventListener('load', () => {loadData('https://swapi.dev/api/films/', true, false, false, false,false, false);});

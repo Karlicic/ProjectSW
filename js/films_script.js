@@ -1,3 +1,7 @@
+import {people, planets, starships, species, vehicles} from "./fetch_data.js";
+import {findObject, findMovie} from "./fetch_data.js";
+
+/*
 people = []
 planets = []
 residents = []
@@ -56,26 +60,6 @@ function loadPlanets(url){
         .then((data) => {
             setPlanets(data.results)
             loadPlanets(data.next)
-        })
-        .catch((err) => {
-            console.error(err)
-        })
-}
-
-function loadResident(url, i){
-    if (i >= url.length)
-        return ;
-    fetch(url[i])
-        .then((response) => {
-            return response.json()
-        })
-        .then((data) => {
-            setResident(data)
-            i += 1
-            let details = document.getElementsByClassName('more-info')
-            let htmlString = "<span onclick='findPerson("+ i +")'>"+ data.name +", </span>"
-            details.item(0).innerHTML += htmlString
-            loadResident(url, i)
         })
         .catch((err) => {
             console.error(err)
@@ -171,6 +155,7 @@ function setVehicles(data){
     vehicles.push(data.results)
 }
 
+
 function addCharacters(num){
     let title = document.getElementsByClassName('filmTitle')
     title.item(0).textContent = movies[0].results[num].title
@@ -230,6 +215,8 @@ function addVehicles(num){
     }
     checkIfClickedVehicle()
 }
+
+
 
 function findMovies(url) {
     let arr = movies[0].results
@@ -355,11 +342,103 @@ function findVehicleByName(name){
     return null
 }
 
+*/
+
+
+window.addEventListener('load',  () => {
+    loadMovies('https://swapi.dev/api/films/');
+});
+
+
+let movies = []
+
+function loadMovies(url){
+
+    fetch(url)
+        .then((response) => {
+            return response.json()
+        })
+        .then((data) => {
+            setMovies(data)
+        })
+        .catch((err) => {
+            console.error(err)
+        })
+}
+
+function setMovies(data){
+    movies.push(data.results)
+    console.log(movies)
+    for (let i=0; i<movies[0].length; i++)
+        document.getElementsByClassName('card-header').item(i).textContent = movies[0][i].title
+
+}
+
+function addItem(num, isCharacter, isPlanet, isStarship, isSpecies, isVehicle){
+
+    if(isCharacter){
+        let title = document.getElementsByClassName('filmTitle')
+        title.item(0).textContent = movies[0][num].title
+
+        let list = document.getElementsByClassName('list-group')
+        list.item(0).innerHTML = ``;
+
+        for(let i =0; i<movies[0][num].characters.length; i++){
+            let char = findObject(movies[0][num].characters[i], people, true)
+            if (char != null) {
+                list.item(0).innerHTML += `<li class="list-group-item"><a class="character-link" href="#story">${char.name}</a></li>`;
+            }
+        }
+        checkIfClickedCharacter();
+    }
+    else if(isPlanet){
+        let list = document.getElementsByClassName('list-group')
+        list.item(1).innerHTML = ``
+        for(let i =0; i<movies[0][num].planets.length; i++){
+            let s = findObject(movies[0][num].planets[i], planets, true)
+            if (s!=null)
+                list.item(1).innerHTML += `<li class="list-group-item"><a href="#story" class="planet-link">${s.name}</a></li>`
+        }
+        checkIfClickedPlanet();
+    }
+    else if(isStarship){
+        let list = document.getElementsByClassName('list-group')
+        list.item(2).innerHTML = ``
+        for(let i =0; i<movies[0][num].starships.length; i++){
+            let s = findObject(movies[0][num].starships[i], starships, true)
+            if (s!=null)
+                list.item(2).innerHTML += `<li class="list-group-item"><a href="#story" class="starship-link">${s.name}</a></li>`
+        }
+        checkIfClickedStarship()
+    }
+    else if(isSpecies){
+        let list = document.getElementsByClassName('list-group')
+        list.item(3).innerHTML = ``
+        for(let i =0; i<movies[0][num].species.length; i++){
+            let s = findObject(movies[0][num].species[i], species, true)
+            if (s!=null)
+                list.item(3).innerHTML += `<li class="list-group-item"><a href="#story" class="specie-link">${s.name}</a></li>`
+        }
+        checkIfClickedSpecie()
+    }
+    else if(isVehicle){
+        let list = document.getElementsByClassName('list-group')
+        list.item(4).innerHTML = ``
+        for(let i =0; i<movies[0][num].vehicles.length; i++){
+            let s = findObject(movies[0][num].vehicles[i], vehicles,true)
+            if (s!=null)
+                list.item(4).innerHTML += `<li class="list-group-item"><a href="#story" class="vehicle-link">${s.name}</a></li>`
+        }
+        checkIfClickedVehicle()
+    }
+
+}
+
 function characterDescription(characterName) {
     let temp = []
-    let character = findCharacterByName(characterName);
-    let specie = findSpecies(character.species);
-    let planet = findPlanets(character.homeworld);
+    let character = findObject(characterName, people, false);
+    let specie = findObject(character.species, species, true);
+    let planet = findObject(character.homeworld, planets, true);
     let title = document.getElementsByClassName('title').item(0)
     let description = document.getElementsByClassName('description').item(0)
     let pronoun;
@@ -377,7 +456,8 @@ function characterDescription(characterName) {
             description.innerHTML += ` born in ${character.birth_year}`
     description.innerHTML += `, comes from the planet <a class="planet-link">${planet.name}</a>. ${pronoun} made an appearance in ${character.films.length} Star Wars movies: `
     for(let i =0 ; i <character.films.length; i++) {
-        temp.push(findMovies(character.films[i]))
+        let obj = findObject(character.films[i], movies, true)
+        temp.push(obj)
         if (i === character.films.length - 1){
             description.innerHTML += temp[i].title + ". "
         }else {
@@ -387,13 +467,13 @@ function characterDescription(characterName) {
     let arrVehicles = []
     if(character.vehicles.length !== 0){
         for(let i= 0; i <character.vehicles.length; i++){
-            arrVehicles[i] = findVehicles(character.vehicles[i]);
+            arrVehicles[i] = findObject(character.vehicles[i], vehicles, true);
         }
     }
     let arrStarships = []
     if(character.starships.length !== 0){
         for(let i= 0; i <character.starships.length; i++){
-            arrStarships[i] = findStarships(character.starships[i]);
+            arrStarships[i] = findObject(character.starships[i], starships, true);
         }
     }
     if(character.vehicles.length !== 0 && character.starships.length !== 0){
@@ -433,7 +513,7 @@ function characterDescription(characterName) {
 }
 
 function planetDescription(planetName){
-    let planet = findPlanetByName(planetName)
+    let planet = findObject(planetName, planets, false)
     let title = document.getElementsByClassName('title').item(0)
     let description = document.getElementsByClassName('description').item(0)
     title.textContent = planetName
@@ -445,10 +525,10 @@ function planetDescription(planetName){
         for(let i = 0; i<planet.residents.length; i++){
             if(i === planet.residents.length- 1)
             {
-                description.innerHTML += `<a class="character-link">${findCharacter(planet.residents[i]).name}</a>. `
+                description.innerHTML += `<a class="character-link">${findObject(planet.residents[i], people, true).name}</a>. `
                 continue
             }
-            description.innerHTML += `<a class="character-link">${findCharacter(planet.residents[i]).name}</a>, `
+            description.innerHTML += `<a class="character-link">${findObject(planet.residents[i], people, true).name}</a>, `
 
         }
     }
@@ -456,7 +536,7 @@ function planetDescription(planetName){
 }
 
 function starshipDescription(starshipName){
-    let starship = findStarshipByName(starshipName)
+    let starship = findObject(starshipName, starships, false)
     let title = document.getElementsByClassName('title').item(0)
     let description = document.getElementsByClassName('description').item(0)
     title.textContent = starshipName
@@ -471,13 +551,13 @@ function starshipDescription(starshipName){
 <br> Starship class: ${starship.starship_class}
 <br> Seen in ${starship.films.length} Star Wars movies: <br>`
     for(let i =0 ; i<starship.films.length; i++){
-        description.innerHTML += findMovies(starship.films[i]).title + `<br>`
+        description.innerHTML += findObject(starship.films[i], movies, true).title + `<br>`
     }
 
 }
 
 function vehicleDescription(vehicleName){
-    let vehicle = findVehicleByName(vehicleName)
+    let vehicle = findObject(vehicleName, vehicles, false)
     let title = document.getElementsByClassName('title').item(0)
     let description = document.getElementsByClassName('description').item(0)
     title.textContent = vehicleName
@@ -492,12 +572,12 @@ function vehicleDescription(vehicleName){
 <br> Vehicle class: ${vehicle.vehicle_class}
 <br> Seen in ${vehicle.films.length} Star Wars movies: <br>`
     for(let i =0 ; i<vehicle.films.length; i++){
-        description.innerHTML += findMovies(vehicle.films[i]).title + `<br>`
+        description.innerHTML += findObject(vehicle.films[i], movies, true).title + `<br>`
     }
 }
 
 function specieDescription(speciesName){
-    let specie = findSpecieByName(speciesName)
+    let specie = findObject(speciesName, species, false)
     let title = document.getElementsByClassName('title').item(0)
     let description = document.getElementsByClassName('description').item(0)
     title.textContent = speciesName
@@ -510,14 +590,14 @@ function specieDescription(speciesName){
     else{
         description.innerHTML +=`Their race is ${specie.skin_colors}.`
     }
-    description.innerHTML +=` They come from the homeworld <a class="planet-link">${findPlanets(specie.homeworld).name}</a>. 
+    description.innerHTML +=` They come from the homeworld <a class="planet-link">${findObject(specie.homeworld, planets, true).name}</a>. 
     In the Star Wars films we meet with ${specie.people.length} ${speciesName}s: `
     for(let i =0 ; i<specie.people.length; i++){
         if(i === specie.people.length -1){
-            description.innerHTML += `<a class="character-link">${findCharacter(specie.people[i]).name}</a>. `
+            description.innerHTML += `<a class="character-link">${findObject(specie.people[i], people, true).name}</a>. `
         }
         else {
-            description.innerHTML += `<a class="character-link">${findCharacter(specie.people[i]).name}</a>, `
+            description.innerHTML += `<a class="character-link">${findObject(specie.people[i], people, true).name}</a>, `
         }
     }
     description.innerHTML +=`Their language is ${specie.language}. `
@@ -525,18 +605,21 @@ function specieDescription(speciesName){
     checkIfClickedPlanet()
 }
 
-document.getElementsByClassName('card-block').item(0).addEventListener('click',function (){
-    addCharacters(0); addPlanets(0); addStarships(0);addVehicles(0);addSpecies(0);})
-document.getElementsByClassName('card-block').item(1).addEventListener('click',function (){
-    addCharacters(1); addPlanets(1); addStarships(1);addVehicles(1);addSpecies(1);})
-document.getElementsByClassName('card-block').item(2).addEventListener('click',function (){
-    addCharacters(2); addPlanets(2); addStarships(2);addVehicles(2);addSpecies(2);})
-document.getElementsByClassName('card-block').item(3).addEventListener('click',function (){
-    addCharacters(3); addPlanets(3); addStarships(3);addVehicles(3);addSpecies(3);})
-document.getElementsByClassName('card-block').item(4).addEventListener('click',function (){
-    addCharacters(4); addPlanets(4); addStarships(4);addVehicles(4);addSpecies(4);})
-document.getElementsByClassName('card-block').item(5).addEventListener('click',function (){
-    addCharacters(5); addPlanets(5); addStarships(5);addVehicles(5);addSpecies(5);})
+function checkIfClickedMovie(){
+    [...document.querySelectorAll('.card-header')].forEach(function(item) {
+        item.addEventListener('click', function() {
+            let i = findMovie(item.innerHTML)
+
+            console.log(item.innerHTML)
+            console.log(i)
+            addItem(i, true, false, false, false, false)
+            addItem(i, false, true, false, false, false)
+            addItem(i, false, false, true, false, false)
+            addItem(i, false, false, false, true, false)
+            addItem(i, false, false, false, false, true)
+        });
+    });
+}
 
 function checkIfClickedCharacter(){
     [...document.querySelectorAll('.character-link')].forEach(function(item) {
@@ -577,3 +660,7 @@ function checkIfClickedSpecie(){
         });
     });
 }
+
+checkIfClickedMovie()
+
+export {checkIfClickedPlanet, checkIfClickedCharacter, checkIfClickedStarship,checkIfClickedSpecie, checkIfClickedVehicle}
